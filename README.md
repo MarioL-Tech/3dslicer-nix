@@ -1,5 +1,7 @@
 # 3d-slicer-nix
 
+![Illustration of medical image slices and a 3D model](assets/overview.svg)
+
 Nix flake packaging the official upstream binary of [3d-slicer](https://www.slicer.org/). This project is not affiliated with or endorsed by upstream.
 
 ## Usage
@@ -13,6 +15,31 @@ nix build .
 ```
 
 For a NixOS configuration, add this repository as a flake input and use `inputs.<input-name>.packages.${pkgs.stdenv.hostPlatform.system}.default` in `environment.systemPackages`. Replace `<input-name>` with your chosen input name. The flake pins nixpkgs in `flake.lock`; update deliberately with `nix flake update nixpkgs`.
+
+## NixOS module
+
+Add the input to your NixOS flake (replace the path with the location of this checkout, or use a repository URL):
+
+```nix
+inputs.slicer.url = "path:/absolute/path/to/3d-slicer-nix";
+```
+
+Import and enable the module in your `nixosSystem` definition:
+
+```nix
+outputs = { nixpkgs, slicer, ... }: {
+  nixosConfigurations.my-machine = nixpkgs.lib.nixosSystem {
+    system = "x86_64-linux";
+    modules = [
+      ./configuration.nix
+      slicer.nixosModules.default
+      { programs."3d-slicer".enable = true; }
+    ];
+  };
+};
+```
+
+The module is disabled by default and installs the package from this flake when enabled. It does not configure graphics drivers or a desktop environment. For a Git-based input, commit or stage new files before evaluating the flake so Nix can see them.
 
 ## Version and licensing
 
