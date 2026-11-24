@@ -1,6 +1,6 @@
 # 3d-slicer-nix
 
-![Illustration of medical image slices and a 3D model](assets/overview.svg)
+![3D Slicer running on NixOS](assets/screenshot.png)
 
 Nix flake packaging the official upstream binary of [3d-slicer](https://www.slicer.org/). This project is not affiliated with or endorsed by upstream.
 
